@@ -4,7 +4,7 @@ var port = 4000
 
 app.get('/',(req,res)=>{
     res.send({
-        message:"Backend project starts now"
+        message:"Backend project starts now in node js"
     })
 })
 app.listen(port,()=>{
