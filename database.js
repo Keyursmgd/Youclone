@@ -7,8 +7,7 @@ const pool = createPool({
     database:"youback"
 });
 
-pool.query(`select * from ds`,(err,res)=>{
+pool.query(`select * from youback.ds`,(err,res)=>{
     return console.log(res)
 })
 
-//

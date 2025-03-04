@@ -1,0 +1,123 @@
+.profile{
+    display: flex;
+    width: 100%;
+    padding: 10px 13px 0 13px;
+    box-sizing: border-box;
+    background-color: black;
+    color: white;
+}
+
+.profile_page{
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    flex: 1;
+    margin-left: 270px;
+    color: white;
+    margin-top: 56px;
+    justify-content: center;
+    align-items: center;
+}
+
+.inactprofile{
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    flex: 1;
+    color: white;
+    margin-top: 56px;
+    justify-content: center;
+    align-items: center;
+}
+
+.pro_section{
+    width: 100%;
+    display: flex;
+    padding: 0 0 20px 0;
+}
+
+.sect_profi{
+    width: 15%;
+}
+
+.tumbnail{
+    width: 100%;
+    border-radius: 50%;
+    height: 100%;
+}
+
+.sect_about{
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    padding: 0 10px;
+    width: 85%;
+}
+
+.about_name{
+    font-size: 36px;
+    font-weight: 600;
+}
+
+.about_info{
+    font-size: 16px;
+    color: rgb(153,153,153);
+}
+
+.profile_video{
+    width: 100%;
+}
+
+.pro_title{
+    font-size: 22px;
+    padding-bottom: 10px;
+    color: rgb(207, 206, 206);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgb(153,153,153);
+}
+
+.provideos{
+    display: flex;
+    gap: 10px;
+    height: 100vh;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.provideo_block{
+    width: 210px;
+    height: 210px;
+    padding: 0 10px 20px 0;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.vid_thumbnail{
+    width: 100%;
+    height: 140px;
+}
+
+.provid_img{
+    width: 100%;
+    height: 100%;
+}
+
+.pro_detail{
+    color: white;
+    display: flex;
+    flex-direction: column;
+    
+}
+
+.pro_det_name{
+    width: 100%;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.pro_det_about{
+    color: #ababab;
+    font-size: 13px;
+}
