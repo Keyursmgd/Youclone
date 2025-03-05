@@ -1,14 +1,17 @@
-var express = require("express");
-const { connDB } = require(".\\connections\\conn.js");
-var app = express();
-var port = 4000
+const express = require("express");
+const app = express();
+
+const db = require('./models')
+
+
 
 app.get('/',(req,res)=>{
     res.send({
         message:"Backend project starts now in node js"
     })
 })
-app.listen(port, async()=>{
-    console.log("Our project backend has been started")
-    const db = await connDB();
-})
+db.sequelize.sync().then((req) => {
+    app.listen(4000, async()=>{
+        console.log("Our project backend has been started");
+    });
+});
