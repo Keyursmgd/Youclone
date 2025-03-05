@@ -1,14 +1,9 @@
-const {createPool} = require('mysql');
+const mysql = require('mysql');
 
-const pool = createPool({
+const db = mysql.createConnection({
     host: "localhost",
-    user: "root",
+    user:"root",
     password: "Keyur@12357",
     database:"youback"
-});
-
-pool.query(`select * from ds`,(err,res)=>{
-    return console.log(res)
 })
-
 //
