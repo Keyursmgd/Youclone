@@ -1,37 +1,34 @@
-const { type } = require("express/lib/response");
-const { sequelize,DataTypes } = require("sequelize");
 
-const User = require("./user")
-const video = require("./video")
 
-const comm = sequelize.define(
-    "comm",
-    {
+module.exports = (sequelize, DataTypes) => {
+    const User = require("./user")(sequelize, DataTypes);
+    const Video = require("./video")(sequelize, DataTypes);
+
+    const Comm = sequelize.define("Comm", {
         user: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            references:{
+            references: {
                 model: User,
                 key: "id"
             }
         },
-        vid:{
+        vid: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            references:{
-                model: video,
+            references: {
+                model: Video,
                 key: "id"
             }
         },
-        mess:{
+        mess: {
             type: DataTypes.STRING,
             allowNull: false
         }
-    },
-    {
-        timestamps: true,
-    }
-);
+    }, {
+        timestamps: true
+    });
 
+    return Comm;
+};
 
-module.exports = comm;
