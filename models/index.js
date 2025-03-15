@@ -3,17 +3,10 @@
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
-const DataTypes = require('sequelize');
 const process = require('process');
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/config.json')[env];
-
-const User = require("./user")(Sequelize, DataTypes);
-const Video = require("./video")(Sequelize, DataTypes);
-const Comment = require("./comment")(Sequelize, DataTypes);
-
-const db = {sequelize, Sequelize, User, Video, Comment};
 
 let sequelize;
 if (config.use_env_variable) {
@@ -22,6 +15,9 @@ if (config.use_env_variable) {
   sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
 
+const db = {};
+
+// Load all models dynamically
 fs
   .readdirSync(__dirname)
   .filter(file => {
@@ -37,19 +33,21 @@ fs
     db[model.name] = model;
   });
 
+// Associations
 Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {
     db[modelName].associate(db);
   }
 });
 
-User.hasMany(Video, { foreignKey: "userID" });
-Video.belongsTo(User, { foreignKey: "userID" });
+// Define relationships
+db.User.hasMany(db.video, { foreignKey: "userID" });
+db.video.belongsTo(db.User, { foreignKey: "userID" });
 
-User.hasMany(Comment, { foreignKey: "user" });
-Video.hasMany(Comment, { foreignKey: "vid" });
-Comment.belongsTo(User, { foreignKey: "user" });
-Comment.belongsTo(Video, { foreignKey: "vid" });
+db.User.hasMany(db.Comm, { foreignKey: "user" });
+db.video.hasMany(db.Comm, { foreignKey: "vid" });
+db.Comm.belongsTo(db.User, { foreignKey: "user" });
+db.Comm.belongsTo(db.video, { foreignKey: "vid" });
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
