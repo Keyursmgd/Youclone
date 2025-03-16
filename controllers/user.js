@@ -1,23 +1,31 @@
-const User = require('../models/user');
-const bcrypt = require('bcryptjs');
-
+const db = require("../models/index"); 
+const User = db.User; // Use the Sequelize model from db
+const bcrypt = require("bcryptjs");
 
 exports.signUp = async (req, res) => {
-    // console.log("In signup function")
     try {
-        const { channelName, userName, about, profilePic,password } = req.body;
-        const isExist = await User.findOne({ userName });
-        console.log(isExist);
+        console.log("SignUp function called");
+        const { channelName, userName, about, profilePic, password } = req.body;
+
+        const isExist = await User.findOne({ where: { userName } }); // Correct Sequelize syntax
+
         if (isExist) {
-            res.status(400).json({ error: "Username already exist. Please try again" });
-        } else {
-            let updateP = await bcrypt.hash(password, 10);
-            const use = new User({ channelName, userName, about,profilePic, password: updateP});
-            await use.save();
-            res.status(201).json({ message: "User registered successfully", success: "yes", data: User });
+            return res.status(400).json({ error: "Username already exists. Please try again" });
         }
 
-    } catch (error) {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const newUser = await User.create({
+            channelName,
+            userName,
+            about,
+            profilePic,
+            password: hashedPassword
+        });
 
+        res.status(201).json({ message: "User registered successfully", success: "yes", data: newUser });
+
+    } catch (error) {
+        console.error("Error in signUp:", error);
+        res.status(500).json({ error: "Internal server error" });
     }
-}
+};
