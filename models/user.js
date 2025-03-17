@@ -2,15 +2,20 @@ const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => { 
   const User = sequelize.define("User", {
+    // id: {
+    //     type: DataTypes.INTEGER,
+    //     autoIncrement: true,
+    //     primaryKey: true
+    // },
       channelName: {
           type: DataTypes.STRING,
           allowNull: false,
       },
       userName: {
-          type: DataTypes.STRING,
-          allowNull: false,
-          unique: true,
-      },
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true  // Ensure only one UNIQUE constraint
+    },
       password: {
           type: DataTypes.STRING,
           allowNull: false
@@ -24,7 +29,7 @@ module.exports = (sequelize) => {
           allowNull: false
       },
   }, {
-      timestamps: true
+      timestamps: false
   });
 
   return User;
