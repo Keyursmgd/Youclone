@@ -29,3 +29,18 @@ exports.signUp = async (req, res) => {
         res.status(500).json({ error: "Internal server error" });
     }
 };
+
+exports.signIn = async(req,res) =>{
+    try{
+        const {userName, password} = req.body;
+        const user = await User.findOne({ where: { userName } });
+        if (user && await bcrypt.compare(password, user.password)){
+            res.json({message:"Logged In Successfully",success:"true"});
+        }else{
+            res.status(400).json({error: "Invalid Credentials"});
+        }
+
+    }catch(error){
+        res.status(500).json({ error: "Internal server error" });
+    }
+}

@@ -5,7 +5,8 @@ const db = require('./models/index')
 
 
 app.use(express.json())
-const AuthRoutes = require("./Routes/user")
+const AuthRoutes = require("./Routes/user");
+
 
 app.use('/auth', AuthRoutes);
 
