@@ -1,15 +1,14 @@
 
 
 module.exports = (sequelize, DataTypes) => {
-    const User = require("./user")(sequelize, DataTypes);
-    const Video = require("./video")(sequelize, DataTypes);
+    
 
     const Comm = sequelize.define("Comm", {
         user: {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: User,
+                model: "Users",
                 key: "id"
             }
         },
@@ -17,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: Video,
+                model: "Videos",
                 key: "id"
             }
         },

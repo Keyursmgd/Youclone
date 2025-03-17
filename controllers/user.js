@@ -44,18 +44,19 @@ exports.signIn = async (req, res) => {
         const user = await User.findOne({ where: { userName } });
         if (user && await bcrypt.compare(password, user.password)) {
 
-            const token = jwt.sign({ userId: user._id }, "Its_My_Secret_key",cookieOptions);
-            res.cookie('token',token);
+            const token = jwt.sign({ userId: user.id }, "Its_My_Secret_key", { expiresIn: "1h" });
+            res.cookie('token',token,cookieOptions);
             res.status(201).json({ message: "Logged In Successfully", success: "true",token }); // token to be added in res.status
         } else {
             res.status(400).json({ error: "Invalid Credentials" });
         }
 
     } catch (error) {
+        console.error("Error in signIn:", error);
         res.status(500).json({ error: "Internal server error" });
     }
 }
 
-exports.logOut = async(req,res) =>{
-    res.clearCookie('token',cookieOptions).json({message:'Logged Out Successfully'});
+exports.logout = async(req,res)=>{
+    res.clearCookie('token', cookieOptions).json({ message: 'Logged out successfully' });
 }
