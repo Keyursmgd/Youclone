@@ -1,6 +1,14 @@
-const db = require("../models/index"); 
+const db = require("../models/index");
 const User = db.User; // Use the Sequelize model from db
 const bcrypt = require("bcryptjs");
+const jwt = require('jsonwebtoken');
+
+const cookieOptions = {
+    httpOnly: true,
+    secure: false,
+    sameSite: 'Lax'
+
+};
 
 exports.signUp = async (req, res) => {
     try {
@@ -11,7 +19,7 @@ exports.signUp = async (req, res) => {
 
         if (isExist) {
             return res.status(400).json({ error: "Username already exists. Please try again" });
-        }
+        } 
 
         const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = await User.create({
@@ -30,17 +38,24 @@ exports.signUp = async (req, res) => {
     }
 };
 
-exports.signIn = async(req,res) =>{
-    try{
-        const {userName, password} = req.body;
+exports.signIn = async (req, res) => {
+    try {
+        const { userName, password } = req.body;
         const user = await User.findOne({ where: { userName } });
-        if (user && await bcrypt.compare(password, user.password)){
-            res.json({message:"Logged In Successfully",success:"true"});
-        }else{
-            res.status(400).json({error: "Invalid Credentials"});
+        if (user && await bcrypt.compare(password, user.password)) {
+
+            const token = jwt.sign({ userId: user._id }, "Its_My_Secret_key",cookieOptions);
+            res.cookie('token',token);
+            res.status(201).json({ message: "Logged In Successfully", success: "true",token }); // token to be added in res.status
+        } else {
+            res.status(400).json({ error: "Invalid Credentials" });
         }
 
-    }catch(error){
+    } catch (error) {
         res.status(500).json({ error: "Internal server error" });
     }
+}
+
+exports.logOut = async(req,res) =>{
+    res.clearCookie('token',cookieOptions).json({message:'Logged Out Successfully'});
 }
