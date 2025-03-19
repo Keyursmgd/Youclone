@@ -9,9 +9,11 @@ app.use(cookieParser());
 
 app.use(express.json())
 const AuthRoutes = require("./Routes/user");
+const vidRoutes = require("./Routes/video");
 
 
 app.use('/auth', AuthRoutes);
+app.use('/api', vidRoutes);
 
 db.sequelize.sync({ alter: true }).then(() => {
     app.listen(4000, () => {

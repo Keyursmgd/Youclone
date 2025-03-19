@@ -1,8 +1,7 @@
 const { DataTypes } = require("sequelize");
 
 module.exports = (sequelize) => {
-  const User = require("./user")(sequelize, DataTypes);
-  const video = sequelize.define("video", {
+  const Video = sequelize.define("video", {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
@@ -12,7 +11,7 @@ module.exports = (sequelize) => {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: "Users", // Ensure this matches the actual table name
+        model: "Users", // Ensure this matches your actual table name
         key: "id",
       },
       onDelete: "CASCADE",
@@ -49,5 +48,5 @@ module.exports = (sequelize) => {
     timestamps: true,
   });
 
-  return video;
+  return Video; // Ensure the correct variable name is returned
 };
