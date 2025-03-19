@@ -44,7 +44,7 @@ exports.signIn = async (req, res) => {
         const user = await User.findOne({ where: { userName } });
         if (user && await bcrypt.compare(password, user.password)) {
 
-            const token = jwt.sign({ userId: user.id }, "Its_My_Secret_key", { expiresIn: "1h" });
+            const token = jwt.sign({ userId: user.id }, "Its_My_Secret_key");
             res.cookie('token',token,cookieOptions);
             res.status(201).json({ message: "Logged In Successfully", success: "true",token }); // token to be added in res.status
         } else {
