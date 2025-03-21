@@ -52,7 +52,7 @@ db.Comm.belongsTo(db.video, { foreignKey: "vid" });
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
-sequelize.sync({ alter: true }) //change force and alter
+sequelize.sync() //change force and alter
     .then(() => console.log("Database & tables created!"))
     .catch(err => console.error("Sync error:", err));
 
