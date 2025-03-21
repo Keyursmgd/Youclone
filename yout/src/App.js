@@ -7,6 +7,7 @@ import {Route,Routes} from 'react-router-dom';
 import Profile from './Pages/Profile/profile';
 import VideoUpload from './Pages/VideoUpload/videoUpload';
 import Signup from './Pages/Signup/signup';
+import axios from 'axios';
 
 function App() {
     const [sideNavbar, setSideNavbar] = useState(true);
