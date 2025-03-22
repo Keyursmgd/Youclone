@@ -7,10 +7,18 @@ import {Route,Routes} from 'react-router-dom';
 import Profile from './Pages/Profile/profile';
 import VideoUpload from './Pages/VideoUpload/videoUpload';
 import Signup from './Pages/Signup/signup';
-import axios from 'axios';
+//import axios from 'axios';
 
 function App() {
     const [sideNavbar, setSideNavbar] = useState(true);
+
+    // useEffect(()=>{
+    //     axios.get('http://localhost:4000/api/allVideo').then(res=>{
+    //         console.log(res);   
+    //     }).catch(err=>{
+    //         console.log(err);
+    //     })
+    // },[])
 
     const setSideNavbarFunc = (value) => {
         setSideNavbar(value);

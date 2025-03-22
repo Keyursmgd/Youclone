@@ -3,10 +3,14 @@ const app = express();
 
 const db = require('./models/index')
 const cookieParser = require("cookie-parser");
+const cors = require('cors')
 
 app.use(cookieParser());
 
-
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true
+}))
 app.use(express.json())
 const AuthRoutes = require("./Routes/user");
 const vidRoutes = require("./Routes/video");
