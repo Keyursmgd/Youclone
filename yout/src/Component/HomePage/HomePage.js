@@ -51,13 +51,13 @@ const HomePage = ({ sideNavbar }) => { // eslint-disable-next-line
 
                                 <div className="youtitlebio">
                                     <div className="youprofile">
-                                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTve3bUTQ03CCNYhxT4jAl73wZm3yRDsNCMfQ&s" alt="madd" className="you_thumb_profile" />
+                                        <img src={item?.User?.profilePic} alt="madd" className="you_thumb_profile" />
                                     </div>
 
                                     <div className="youtittitle">
-                                        <div className="youvidtit">Chhaava Trailer</div>
-                                        <div className="youchantit">Maddock Films</div>
-                                        <div className="youvidview">6.9 crore views</div>
+                                        <div className="youvidtit">{item?.title}</div>
+                                        <div className="youchantit">{item?.User?.channelName}</div>
+                                        <div className="youvidview">{item?.like} likes</div>
                                     </div>
                                 </div>
                             </Link>

@@ -1,41 +1,89 @@
-import React,{useState} from "react"; 
+import React, { useState, useEffect } from "react";
 // import cloudinary from 'cloudinary-video-player';
 // import "cloudinary-video-player/cld-video-player.min.css";
 import './video.css';
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import ThumbDownOffAltIcon from '@mui/icons-material/ThumbDownOffAlt';
 import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 
-const Video = () =>{
-    const [message,setMessage] = useState("");
-    
-    return(
+
+const Video = () => {
+    const [message, setMessage] = useState("");
+    const [data, setData] = useState(null);
+    const [videoUrl, setVideoUrl] = useState("");
+    const { id } = useParams();
+    const [comments, setComments] = useState([])
+
+    const fetchVideoById = async () => {
+        await axios.get(`http://localhost:4000/api/getVidId/${id}`).then((response) => {
+            console.log(response.data.video);
+            setData(response.data.video);
+            setVideoUrl(response?.data?.video?.videoLink)
+        }).catch(err => {
+            console.error("Axios Error:", err.message);
+            if (err.response) {
+                console.error("Error Response Data:", err.response.data);
+                console.error("Error Status:", err.response.status);
+            } else if (err.request) {
+                console.error("No response received from server.");
+            } else {
+                console.error("Axios Request Error:", err.message);
+            }
+        });
+    };
+
+    const getCommentByVideoId = async () => {
+        await axios.get(`http://localhost:4000/com/comment/${id}`).then((response) => {
+            console.log(response);
+            setComments(response.data.comments);
+        }).catch(err => {
+            console.error("Axios Error:", err.message);
+            if (err.response) {
+                console.error("Error Response Data:", err.response.data);
+                console.error("Error Status:", err.response.status);
+            } else if (err.request) {
+                console.error("No response received from server.");
+            } else {
+                console.error("Axios Request Error:", err.message);
+            }
+        });
+    };
+    useEffect(() => {
+        fetchVideoById();
+        getCommentByVideoId();
+    }, [])
+
+    return (
         <div className="vid">
             <div className="vidpost">
                 <div className="vid_youvid">
-                    <video width="400" controls autoPlay className="you_vid_vid">
+                    {
+                        data && <video width="400" controls className="you_vid_vid">
 
-                        <source src="http://res.cloudinary.com/dstm8hbb5/video/upload/v1740402387/fsb2ih5yzqqfrh3wtg2e.mp4" type="video/mp4"/>
-                        <source src="http://res.cloudinary.com/dstm8hbb5/video/upload/v1740402387/fsb2ih5yzqqfrh3wtg2e.mp4" type="video/webm"/>
+                            <source src={videoUrl} type="video/mp4" />
+                            <source src={videoUrl} type="video/webm" />
 
-                        your browser doesn't support the video
+                            your browser doesn't support the video
 
-                    </video>
+                        </video>
+                    }
                 </div>
 
                 <div className="video_youtuAbout">
 
-                    <div className="vid_utubTitle">{"Chhaava Official Trailer"}</div>
+                    <div className="vid_utubTitle">{data?.title}</div>
 
                     <div className="you_vid_pro">
                         <div className="you_vid_pro_left">
-                            <Link to = {'/user/5345'}className="u_pro_img">
-                                <img className="you_img" src={"data:image/png;base64,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"} alt="" />
+                            <Link to={`/user/${data?.User?.id}`} className="u_pro_img">
+                                <img className="you_img" src={data?.User?.profilePic} alt="" />
                             </Link>
 
                             <div className="subsview">
-                                <div className="profname">{"Maddock Films"}</div>
-                                <div className="profsubs">{"2025-01-22"}</div>
+                                <div className="profname">{data?.User?.channelName}</div>
+                                {/* <div className="profsubs">{data?.createdAt.slice(0,10)}</div> */}
                             </div>
 
                             <div className="sub">Subscribe</div>
@@ -45,22 +93,22 @@ const Video = () =>{
                         <div className="you_vid_pro_right">
                             <div className="youlike">
                                 <ThumbUpOffAltIcon />
-                                <div className="nooflikes">{32}</div>
+                                <div className="nooflikes">{data?.like}</div>
                             </div>
 
                             <div className="divider"></div>
 
                             <div className="youlike">
                                 <ThumbDownOffAltIcon />
-                                
+
                             </div>
                         </div>
 
                     </div>
 
                     <div className="youaboblo">
-                        <div>2025-01-22</div>
-                        <div>Watch the movie in cinemas 14th Feb</div>
+                        <div>{data?.createdAt.slice(0, 10)}</div>
+                        <div>{data?.description}</div>
                     </div>
 
                     <div className="comment">
@@ -69,7 +117,7 @@ const Video = () =>{
                         <div className="selfcomme">
                             <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAMAAzAMBIgACEQEDEQH/xAAbAAEAAgMBAQAAAAAAAAAAAAAABQYCAwQBB//EADcQAAICAQEGAQkIAQUAAAAAAAABAgMRBAUSITFBUXEGEyIyUmGBkbEUI0JicqHB0TMVJDREU//EABQBAQAAAAAAAAAAAAAAAAAAAAD/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwD6gAAAAAAAAAAAAAAxnONa3pyjFc+LwIWK2CnXJOL5MDIHDtPaMdC4xjFTnLjjOMI5qtvUt4tpnD3p5AlwaqNRTqI71M1LuuxtAAAAAAAAAAAAAAAAAAAAAAAAAEbtPacdInVTiVz78omnaW11VKVWlw5rhKb5LwIKcnJuUm5Sby89QM77rb5uVtjk33JR7bjXp66tPS8xilmXJEOAMrbJ3TdlsnKbfFtmIAGdNtlFinVJxkuqLJsvaUdZHdmlG6K4rpLwKwerK9KOU0+DAuvuwCu6DbNlUtzVZsr9rqv7LBCcbIqUJJprKaAyAAAAAAAAAAAAAAAAAAAjttax6bT7tbxZPKz2RIlX23d53aNizlVpQX8/uBwgHZs3Z9mtsyswrXrT/hAcaWWkllvojdDSamfq0WP4Fr0uj0+lhu01RT9p8W/ib/gBUVs3WP8A68zL/S9b/wCEi2ACs0bE1VkvvMVx75yzPbOlr0dGnqqXtNyfOTLGQ/lLDOnqn7MmvmBX+HHgS+wNZKFn2WfGEuMfcyIMq7HVOM484vKAugMYS34RkuqyZAAAAAAAAAAAAAAAAAOxTdW97V3S72S+pcuqKdrFu6y+L6WSX7gY0VSvuhVD1pPBcNNTDT0QqrWIxX79yA8na1PXSnj1IZXiyyAAAAAAA5dp0fadDbWvWxmPijqAFH8fl2PGSm3NC9Pe7q191Y8v8rItgXDZ8t7Q6eT61x+hvNGhjuaOiPauP0N4AAAAAAAAAAAAAAAAArG3KtzaVjxwmlJfR/Qs6IXylq/wXdOMWA8mY8NRNd4r6k4Q3kzw01/619CZAAAAAAAAA0a6EZ6O5SWVuMp8I78ow6yaRcdZ/wAS79DKvsqrzuvoXZ5fwAtcI7sVHssHoYAAAAAAAAAAAAAAAAAI49tVee2dZwTcPSR2IWRVkHXLlJNcgIvybjjR2PvZ/CJY59FpYaPTxpre8s5b7s6AAAAAAAAANWrX+0u/RIhfJujessvlyit1E81lNNJprDTNOj01ekpVdbeG2+PvA3S5o8DAAAAAAAAAAAAAAAAAA9XI8AGQHJJ9GAAAAAAAAAB7hYeea6HnLiYttsAAAAAAAAAAAAAAAAAAAAAA9TzwfJHpiZfUAAAAAAADxA8Z4GAAAAAAAAAAAAAAAAAAAAAD+QHThxMZNtZrxvQ58f2Inam1fNuVGlac8YnPovcjf5PNy0Um223Y8t9QO+u2FnBP0uzNhouo3vTr4T6mham2DxLjjowO4HH9sfsL5nktXN8Ird94HXKahFuTwjklqFO2H4YJ8cmmUpSeZNtmq/8Aw2fpYEtFqXGOGnyaeQVbZ20bNH6LzOl+tHqvAs1VsLq42VPejLlgDMBgAAAAAAAAAAAAAAA0X6zTadZutjF9s5fyIy/bsVn7PU32c/6AmsZInbO0fMp0US+9frNfhRF27U1lvO3dX5OBxt5bbbbfVgPHiWPydedDJrpYyuHTodbbo7N6tpp+tF8mBbzCyuNixJfE59DtCjWJbklGeOMJczq58+QHJPSS51yTXZ8GapU2x51yJEARvmrH+CXyMdRTNaa2UlupQeXLgd+q1FOlr37pqK7dX4Irm1Npz1ma4xcKVxx1YEeuGDt2brpaO1J5dMn6ce3vOIAXSEozrjOElKLXBrqZFPo1eopW7TbKK7Lid9G3L48LoRmu64MCwg4dNtbSX4i5OuXaax+52qSksx4rugPQAAAAAHlk4wi5TajFLLbK7tHbE78w0+YV+11YEtq9p6bSNxcnOfsx4kLq9r6q9tRl5qD/AAw5v4nA8Z4IAHxfV+LyAAAAADIAHqbUlJPDXJ5JnZe15Jxp1Um4t4jN9PEhQBeH3yiP2ptGOjj5utb10lwTfJd2atl6+P8Apsp2v0qFuv8AMun9fAr91srrZ2TeZSeWAuusvsdlsnKb55MAAAAAAAAb9Nq79K15m2UV1TeUzQAJ/SbdrniOqhuP2o8U/wCiVhOFkFKuSlF9U8lL8TfpNZdpLE6pYXWL5MC3g5dBr6tbXmvKnH1oPmjqAru3NbK296eEvuq3iXvZFnsm5TlKTy28t92eAAAAAAAAAAAAAAGyFrhTbUuU8GsAAAAAAAAAAAAAAA2ae+emtjbW8ST+a7Ft010NTRC2vlJcfcynE/sC3GjnFyWI2NLj0wgP/9k=" alt="selfprofile" className="selfcommprofi" />
                             <div className="addcomme">
-                                <input type="text" value={message} onChange={(e)=>setMessage(e.target.value)} className="addinput" placeholder="add a comment..."/>
+                                <input type="text" value={message} onChange={(e) => setMessage(e.target.value)} className="addinput" placeholder="add a comment..." />
                                 <div className="cancelsubmitcomment">
                                     <div className="cancel">Cancel</div>
                                     <div className="cancel">Comment</div>
@@ -77,20 +125,28 @@ const Video = () =>{
                             </div>
                         </div>
 
-                        <div className="othecomm">
-                            <div className="selfcomme">
-                                <img src="data:image/jpeg;base64,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" alt="selfprofile" className="selfcommprofi" />
-                                <div className="others_comment">
-                                    <div className="other_header">
-                                        <div className="chann_comment">UserName</div>
-                                        <div className="commtimm">2025-01-22</div>
-                                    </div>
+                        <div className="othecomm"> 
+                            {/* comments api to be continued */}
+                            {
+                                comments.map((item, index) => {
+                                    return (
+                                        <div className="selfcomme">
+                                            <img src="data:image/jpeg;base64,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" alt="selfprofile" className="selfcommprofi" />
+                                            <div className="others_comment">
+                                                <div className="other_header">
+                                                    <div className="chann_comment">UserName</div>
+                                                    <div className="commtimm">2025-01-22</div>
+                                                </div>
 
-                                    <div className="comm_comm">
-                                        Nice
-                                    </div>
-                                </div>
-                            </div>
+                                                <div className="comm_comm">
+                                                    Nice
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })
+                            }
+
                         </div>
 
                     </div>
