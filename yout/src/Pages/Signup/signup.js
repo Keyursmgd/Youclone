@@ -34,6 +34,10 @@ const Signup = () =>{
         }
     }
 
+    const handleSignUp = async() =>{
+        
+    }
+
     return (
         <div className="signup">
             <div className="signup_card">
@@ -55,7 +59,7 @@ const Signup = () =>{
                     </div>
 
                     <div className="signUpbtns">
-                        <div className="signBtn">SignUp</div>
+                        <div className="signBtn" onClick={()=>handleSignUp}>SignUp</div>
                         <Link to ={'/'} className="signBtn">Home Page</Link>
                     </div>
                 </div>

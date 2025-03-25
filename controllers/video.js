@@ -56,27 +56,46 @@ exports.getVidId = async (req,res) => {
     }
 }
 
-exports.getAllVideoByUserID = async(req,res) =>{
-    try{
-        let {userId} = req.params;
-        const video = await Video.findAll({ 
-            where: { userID: userId } 
-        },{
+exports.getAllVideoByUserID = async (req, res) => {
+    try {
+        let { userId } = req.params;
+        const videos = await Video.findAll({
+            where: { userID: userId },
             include: [
                 {
-                    model: db.User, // Ensure this matches your Sequelize model name
-                    attributes: ["channelName", "profilePic", "userName"],
+                    model: db.User,
+                    attributes: ["channelName", "profilePic", "userName","about"],
                 },
             ],
         });
 
-        if (!video) {
-            return res.status(404).json({ success: "false", message: "Video not found" });
+        if (!videos || videos.length === 0) {
+            return res.status(404).json({ success: "false", message: "Videos not found" });
         }
 
-        res.status(201).json({success:"true","video": video});
-    }catch (error) {
-        console.error("Error in getting video-id:", error);
+        // Modify response structure
+        const formattedVideos = videos.map(video => ({
+            id: video.id,
+            title: video.title,
+            description: video.description,
+            videoLink: video.videoLink,
+            thumbnail: video.thumbnail,
+            videoType: video.videoType,
+            like: video.like,
+            dislike: video.dislike,
+            createdAt: video.createdAt,
+            updatedAt: video.updatedAt,
+            user: video.User ? {   // Ensure user data exists
+                channelName: video.User.channelName,
+                userName: video.User.userName,
+                profilePic: video.User.profilePic,
+                about:video.User.about
+            } : null
+        }));
+
+        res.status(200).json({ success: "true", video: formattedVideos });
+    } catch (error) {
+        console.error("Error in getting videos by user ID:", error);
         res.status(500).json({ error: "Internal server error" });
     }
-}
+};

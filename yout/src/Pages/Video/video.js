@@ -60,7 +60,7 @@ const Video = () => {
             <div className="vidpost">
                 <div className="vid_youvid">
                     {
-                        data && <video width="400" controls className="you_vid_vid">
+                        data && <video width="400" autoPlay controls className="you_vid_vid">
 
                             <source src={videoUrl} type="video/mp4" />
                             <source src={videoUrl} type="video/webm" />
