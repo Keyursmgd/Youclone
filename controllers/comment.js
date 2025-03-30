@@ -4,8 +4,15 @@ const comm = db.Comm;
 exports.addComment = async (req, res) => {
     try {
         let { video, message } = req.body;
-        const comment = new comm({ user: req.user.id, vid: video, mess: message });
-        await comment.save();
+        console.log(req.body)
+        if (!video || !message) {
+            return res.status(400).json({ error: "Video ID and message are required" });
+        }
+        const comment = await comm.create({
+            user: req.user.id,
+            vid: video,
+            mess: message
+        });
 
         res.status(201).json({
             message: "success",
@@ -21,8 +28,7 @@ exports.getCommentByVideoId = async (req, res) => {
     try {
         let { videoId } = req.params;
         const comments = await comm.findAll({
-            where: { vid: videoId }
-        }, {
+            where: { vid: videoId },
             include: [
                 {
                     model: db.User, // Ensure this matches your Sequelize model name
@@ -30,6 +36,8 @@ exports.getCommentByVideoId = async (req, res) => {
                 },
             ],
         });
+        
+        
         res.status(201).json({
             message: "success",
             comments

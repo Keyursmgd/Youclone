@@ -19,7 +19,6 @@
 .homePageHide{
     display: flex;
     flex-direction: column;
-    overflow-x: hidden;
     flex: 1;
     min-height: 100vh;
 }

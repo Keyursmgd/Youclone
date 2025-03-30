@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import './navbar.css';
 import MenuIcon from '@mui/icons-material/Menu';
 import YouTubeIcon from '@mui/icons-material/YouTube';
@@ -8,11 +8,14 @@ import VideoCallIcon from '@mui/icons-material/VideoCall';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import { Link,useNavigate } from "react-router-dom";
 import Login from "../Login/login";
+import axios from "axios";
 
 const Navbar = ({ setSideNavbarFunc, sideNavbar }) => {   // eslint-disable-next-line
     const [userPic, setUserPic] = useState("https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Unknown_person.jpg/925px-Unknown_person.jpg");
     const [navModel, setNavModel] = useState(false);
     const [login,setLogin] = useState(false);
+    const [isLoggedIn,setIsLoggedIn] = useState(false);
+
     const navigate=useNavigate();
 
     const handleClickModal = () => {
@@ -24,7 +27,8 @@ const Navbar = ({ setSideNavbarFunc, sideNavbar }) => {   // eslint-disable-next
     }
 
     const handleProfile = () => {
-        navigate('/user/4343');
+        let userId = localStorage.getItem("userId")
+        navigate(`/user/${userId}`);
         setNavModel(false);
     }
     const setLoginModel = () =>{
@@ -36,9 +40,30 @@ const Navbar = ({ setSideNavbarFunc, sideNavbar }) => {   // eslint-disable-next
         if(button==="login"){
             setLogin(true)
         }else{
-
+            localStorage.clear();
+            getLogOutFun()
+            setTimeout(() => {
+                navigate('/')
+                window.location.reload();
+            }, 2000);
         }
     }
+
+    const getLogOutFun = async () => {
+        axios.post("http://localhost:4000/auth/logout",{},{withCredentials:true}).then((res)=>{
+            console.log("Logout")
+        }).catch(err=>{
+            console.log(err)
+        })
+    }
+
+    useEffect(() =>{
+        let userProfiePic = localStorage.getItem("userProfiePic")
+        setIsLoggedIn(localStorage.getItem("userId")!==null?true:false);
+        if (userProfiePic !==null){
+            setUserPic(userProfiePic)
+        }
+    },[])
 
     return (
         <div className="navbar">
@@ -74,9 +99,10 @@ const Navbar = ({ setSideNavbarFunc, sideNavbar }) => {   // eslint-disable-next
                 {
                     navModel &&
                     <div className="nav-model">
-                        <div className="nav-mod-option" onClick={handleProfile}>Profile</div>
-                        <div className="nav-mod-option" onClick={()=>conclickOfPopUpOption("logout")}>Logout</div>
-                        <div className="nav-mod-option" onClick={()=>conclickOfPopUpOption("login")}>Login</div>
+                        {isLoggedIn && <div className="nav-mod-option" onClick={handleProfile}>Profile</div>}
+                        
+                        {isLoggedIn && <div className="nav-mod-option" onClick={()=>conclickOfPopUpOption("logout")}>Logout</div>}
+                        {!isLoggedIn && <div className="nav-mod-option" onClick={()=>conclickOfPopUpOption("login")}>Login</div>}
                     </div>
                 }
             </div>

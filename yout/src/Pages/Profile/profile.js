@@ -2,17 +2,17 @@ import React, { useEffect, useState } from "react";
 import './profile.css';
 import SideNavbar from "../../Component/sideNavbar/sideNavbar";
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
-import { Link } from "react-router-dom";
+import { Link,useParams } from "react-router-dom";
 import axios from "axios";
 
 
 const Profile = ({ sideNavbar }) => {
-    //const { id } = useParams();
+    const { id } = useParams();
     const [data, setData] = useState([]);
     const [user, setUser] = useState(null);
 
     const fetchProfileData = async () => {
-        axios.get(`http://localhost:4000/api/2/channel`).then((response) => {
+        axios.get(`http://localhost:4000/api/${id}/channel`).then((response) => {
             console.log(response);
             setData(response.data.video);
             setUser(response.data.video[0]?.user);
@@ -31,7 +31,7 @@ const Profile = ({ sideNavbar }) => {
     }
 
     useEffect(() => {
-        fetchProfileData();
+        fetchProfileData(); // eslint-disable-next-line
     }, [])
 
     return (
