@@ -99,3 +99,12 @@ exports.getAllVideoByUserID = async (req, res) => {
         res.status(500).json({ error: "Internal server error" });
     }
 };
+
+exports.search = async (req,res) => {
+    try {
+        
+    } catch (error) {
+        console.error("Error in searching videos:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+}

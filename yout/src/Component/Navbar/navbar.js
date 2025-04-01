@@ -12,6 +12,7 @@ import axios from "axios";
 
 const Navbar = ({ setSideNavbarFunc, sideNavbar }) => {   // eslint-disable-next-line
     const [userPic, setUserPic] = useState("https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Unknown_person.jpg/925px-Unknown_person.jpg");
+    const [searThi,setSearThi] = useState("");
     const [navModel, setNavModel] = useState(false);
     const [login,setLogin] = useState(false);
     const [isLoggedIn,setIsLoggedIn] = useState(false);
@@ -49,6 +50,7 @@ const Navbar = ({ setSideNavbarFunc, sideNavbar }) => {   // eslint-disable-next
         }
     }
 
+
     const getLogOutFun = async () => {
         axios.post("http://localhost:4000/auth/logout",{},{withCredentials:true}).then((res)=>{
             console.log("Logout")
@@ -80,7 +82,7 @@ const Navbar = ({ setSideNavbarFunc, sideNavbar }) => {   // eslint-disable-next
             <div className="navbar-middle">
                 <div className="navbar_searchBox">
                     <input type="text" placeholder="Search" className="navbar_searchBoxInput" />
-                    <div className="navbar_searchIconBox"><SearchIcon sx={{ fontSize: "28px", color: "white" }} /></div>
+                    <div className="navbar_searchIconBox" ><SearchIcon sx={{ fontSize: "28px", color: "white" }} /></div>
                 </div>
 
                 <div className="navbar_mike">
