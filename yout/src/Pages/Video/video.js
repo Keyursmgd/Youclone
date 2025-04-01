@@ -21,6 +21,7 @@ const Video = () => {
             console.log(response.data.video);
             setData(response.data.video);
             setVideoUrl(response?.data?.video?.videoLink)
+            
         }).catch(err => {
             console.error("Axios Error:", err.message);
             if (err.response) {
@@ -79,6 +80,7 @@ const Video = () => {
 
                             <source src={videoUrl} type="video/mp4" />
                             <source src={videoUrl} type="video/webm" />
+                            
 
                             your browser doesn't support the video
 
