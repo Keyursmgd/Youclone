@@ -1,5 +1,6 @@
 const db = require("../models/index"); // Import the whole models directory
 const Video = db.video; // Access the Video model
+const { Op, where } = require("sequelize")
 
 
 
@@ -101,8 +102,24 @@ exports.getAllVideoByUserID = async (req, res) => {
 };
 
 exports.search = async (req,res) => {
+    
     try {
-        
+        const query = req.query.q;
+        if(!query){
+            return res.status(400).json({message: "Search query is required"});
+        }
+        const video = await Video.findOne({
+            where:{
+                title:{
+                    [Op.like]: `%${query}%`,
+                },
+            },
+        });
+
+        if (!video){
+            res.status(404).json({message: "No video found"});
+        }
+        res.status(201).json({video});
     } catch (error) {
         console.error("Error in searching videos:", error);
         res.status(500).json({ error: "Internal server error" });

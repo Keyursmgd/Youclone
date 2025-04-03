@@ -12,7 +12,7 @@ import axios from "axios";
 
 const Navbar = ({ setSideNavbarFunc, sideNavbar }) => {   // eslint-disable-next-line
     const [userPic, setUserPic] = useState("https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Unknown_person.jpg/925px-Unknown_person.jpg");
-    const [searThi,setSearThi] = useState("");
+    const [query,setQuery] = useState("");
     const [navModel, setNavModel] = useState(false);
     const [login,setLogin] = useState(false);
     const [isLoggedIn,setIsLoggedIn] = useState(false);
@@ -32,6 +32,23 @@ const Navbar = ({ setSideNavbarFunc, sideNavbar }) => {   // eslint-disable-next
         navigate(`/user/${userId}`);
         setNavModel(false);
     }
+
+    const handleSearch = async(e) => {
+        e.preventDefault();
+        if(!query){
+            return;
+        }
+        try {
+            const res = await axios.get(`http://localhost:4000/api/search?q=${query}`);
+            if(res.data.video){
+                navigate(`/watch/${res.data.video.id}`)
+            }
+        } catch (error) {
+            console.error("Search error:",error);
+            alert("Error fetching video");
+        }
+    }
+
     const setLoginModel = () =>{
         setLogin(false);
     }
@@ -81,8 +98,8 @@ const Navbar = ({ setSideNavbarFunc, sideNavbar }) => {   // eslint-disable-next
 
             <div className="navbar-middle">
                 <div className="navbar_searchBox">
-                    <input type="text" placeholder="Search" className="navbar_searchBoxInput" />
-                    <div className="navbar_searchIconBox" ><SearchIcon sx={{ fontSize: "28px", color: "white" }} /></div>
+                    <input type="text" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search" className="navbar_searchBoxInput" />
+                    <div className="navbar_searchIconBox" onClick={handleSearch}><SearchIcon sx={{ fontSize: "28px", color: "white" }} /></div>
                 </div>
 
                 <div className="navbar_mike">
