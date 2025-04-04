@@ -41,7 +41,7 @@ exports.getVidId = async (req,res) => {
             include: [
                 {
                     model: db.User, // Ensure this matches your Sequelize model name
-                    attributes: ["channelName", "profilePic", "userName"],
+                    attributes: ["channelName", "profilePic", "userName", "id"],
                 },
             ],
         });

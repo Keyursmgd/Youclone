@@ -10,6 +10,7 @@ const Profile = ({ sideNavbar }) => {
     const { id } = useParams();
     const [data, setData] = useState([]);
     const [user, setUser] = useState(null);
+    
 
     const fetchProfileData = async () => {
         axios.get(`http://localhost:4000/api/${id}/channel`).then((response) => {
@@ -26,12 +27,15 @@ const Profile = ({ sideNavbar }) => {
             } else {
                 console.error("Axios Request Error:", err.message);
             }
-        });
-
+        }
+    );
+    console.log(id)
     }
 
     useEffect(() => {
-        fetchProfileData(); // eslint-disable-next-line
+        if(id){
+            fetchProfileData();
+        } 
     }, [])
 
     return (
