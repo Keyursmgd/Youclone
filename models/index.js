@@ -18,8 +18,7 @@ if (config.use_env_variable) {
 const db = {};
 
 // Load all models dynamically
-fs
-  .readdirSync(__dirname)
+fs.readdirSync(__dirname)
   .filter(file => {
     return (
       file.indexOf('.') !== 0 &&
@@ -41,19 +40,20 @@ Object.keys(db).forEach(modelName => {
 });
 
 // Define relationships
-db.User.hasMany(db.video, { foreignKey: "userID" });
-db.video.belongsTo(db.User, { foreignKey: "userID" });
+db.User.hasMany(db.video, { foreignKey: 'userID' });
+db.video.belongsTo(db.User, { foreignKey: 'userID' });
 
-db.User.hasMany(db.Comm, { foreignKey: "user" });
-db.video.hasMany(db.Comm, { foreignKey: "vid" });
-db.Comm.belongsTo(db.User, { foreignKey: "user" });
-db.Comm.belongsTo(db.video, { foreignKey: "vid" });
+db.User.hasMany(db.Comm, { foreignKey: 'user' });
+db.video.hasMany(db.Comm, { foreignKey: 'vid' });
+db.Comm.belongsTo(db.User, { foreignKey: 'user' });
+db.Comm.belongsTo(db.video, { foreignKey: 'vid' });
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
-sequelize.sync() //change force and alter
-    .then(() => console.log("Database & tables created!"))
-    .catch(err => console.error("Sync error:", err));
+// Sync with database (force: false, alter: true)
+sequelize.sync({ force: false, alter: true })
+  .then(() => console.log('Database & tables created/updated!'))
+  .catch(err => console.error('Sync error:', err));
 
 module.exports = db;
