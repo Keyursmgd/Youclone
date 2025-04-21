@@ -52,8 +52,20 @@ db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
 // Sync with database (force: false, alter: true)
-sequelize.sync({ force: false, alter: true })
-  .then(() => console.log('Database & tables created/updated!'))
-  .catch(err => console.error('Sync error:', err));
+(async () => {
+  try {
+    await sequelize.authenticate();
+    console.log('Connection has been established successfully.');
+
+    // Sync in order: User → Video → Comm
+    await db.User.sync();
+    await db.video.sync();
+    await db.Comm.sync();
+
+    console.log('All models synced successfully.');
+  } catch (error) {
+    console.error('Error syncing models:', error);
+  }
+})();
 
 module.exports = db;
